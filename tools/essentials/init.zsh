@@ -17,6 +17,7 @@ essentials=(
   exa exa
   fd fd
   jq jq
+  starship starship
 )
 ZDS=$0 debug Ensuring the rest of dependencies
 for tool package in ${(@kv)essentials}; do
