@@ -12,4 +12,5 @@ import tools
 import config
 
 _runPlugins
+_cleanupImportCache
 _runCleanup

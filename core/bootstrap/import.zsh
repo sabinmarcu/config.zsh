@@ -35,6 +35,11 @@ function zsh_import {
 }
 _cleanup zsh_import
 
+function _cleanupImportCache {
+  cache=()
+}
+_cleanup _cleanupImportCache
+
 function resolve {
   local request=$(echo $1 | sed 's/\./\//g')
   local import="$ZSH_CUSTOM/$request"
