@@ -22,5 +22,8 @@ function _get_latest {
 }
 _cleanup _get_latest
 
-_get_latest nodejs
-_get_latest yarn
+if $(shouldUpdate); then
+  ZDS=$ds debug Bootstrapping
+  _get_latest nodejs
+  _get_latest yarn
+fi

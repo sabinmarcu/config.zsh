@@ -1,27 +1,17 @@
-
-import core.utils.compileVariable
-
-local TEXT_STYLE_PREFIX="ZSH_TEXT_STYLE_"
-
-declare -A _zsh_text_style_local
-local rawTextStyle=(
-    Normal 0
-    Bold 1
-    Dim 2
-    Italic 3
-    Underlined 4
-    Blinking 5
-    Reverse 7
-    Invisible 8
+_zsh_text_style_local=(
+    dim 2
+    blinking 5
+    bold 1
+    normal 0
+    invisible 8
+    reverse 7
+    underlined 4
+    italic 3
 )
-
-for k v ("${(@kv)rawTextStyle}") compileVariable "_zsh_text_style_local" $TEXT_STYLE_PREFIX $k $v
-
-_zsh_text_style_export=(${(kv)_zsh_text_style_local})
-_cleanup _zsh_text_style_export
+_cleanup _zsh_text_style_local
 
 function zsh_text_style {
-  if result=$(access "_zsh_text_style_export" $1); then
+  if result=$(access "_zsh_text_style_local" $1); then
     echo $result
     return 0
   fi

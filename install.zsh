@@ -60,4 +60,9 @@ backup $STARSHIP_RC
 ln -s $ZSH_CUSTOM/starship.toml $STARSHIP_RC
 
 echo $(success Linked starship config)
+
+echo $(info Starting first run)
+ZSH_CUSTOM_UPDATE=true zsh
+echo $(success "First run successful!")
+
 echo $(success "All done!")

@@ -1,35 +1,26 @@
-import core.utils.compileVariable 
-
-local COLOR_PREFIX="ZSH_BACKGROUND_COLOR_"
-
-declare -A _zsh_background_colors_local
-rawColors=(
-  Default 49
-  Black 40
-  Red 41
-  Green 42
-  Yellow 43
-  Blue 44
-  Magenta 45
-  Cyan 46
-  "Light Gray" 47
-  "Dark Gray" 100
-  "Light Red" 101
-  "Light Green" 102
-  "Light Yellow" 103
-  "Light Blue" 104
-  "Light Magenta" 105
-  "Light Cyan" 106
-  White 107
+_zsh_background_colors_local=(
+  bgWhite 107
+  bgLightYellow 103
+  bgLightRed 101
+  bgCyan 46
+  bgLightGray 47
+  bgLightCyan 106
+  bgDefault 49
+  bgYellow 43
+  bgLightGreen 102
+  bgRed 41
+  bgDarkGray 100
+  bgBlack 40
+  bgLightMagenta 105
+  bgMagenta 45
+  bgBlue 44
+  bgGreen 42
+  bgLightBlue 104
 )
-
-for k v ("${(@kv)rawColors}") compileVariable _zsh_background_colors_local $COLOR_PREFIX "Bg $k" $v
-
-_zsh_background_colors_export=(${(kv)_zsh_background_colors_local})
-_cleanup _zsh_background_colors_export
+_cleanup _zsh_background_colors_local
 
 function zsh_background_color {
-  if result=$(access "_zsh_background_colors_export" $1); then
+  if result=$(access "_zsh_background_colors_local" $1); then
     echo $result
     return 0
   fi

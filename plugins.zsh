@@ -1,26 +1,25 @@
 plugins+=(
   "willghatch/zsh-saneopt"
   "akash329d/zsh-alias-finder"
-  "wfxr/forgit, defer:1"
-  "redxtech/zsh-asdf-direnv"
+  "wfxr/forgit kind:defer"
   "MichaelAquilina/zsh-auto-notify"
   "hlissner/zsh-autopair"
-  "zsh-users/zsh-syntax-highlighting"
   "zsh-users/zsh-autosuggestions"
-  "zsh-users/zsh-history-substring-search, defer:1"
-  "fdellwing/zsh-bat"
+  "zsh-users/zsh-syntax-highlighting"
+  "zsh-users/zsh-history-substring-search"
+  "fdellwing/zsh-bat kind:defer"
   "zpm-zsh/colorize"
   "unixorn/fzf-zsh-plugin"
-  "changyuheng/fz, defer:1"
-  "rupa/z, use:z.sh"
+  "changyuheng/fz"
+  "rupa/z path:z.sh"
   "mdumitru/git-aliases"
   "wfxr/emoji-cli"
-  "reegnz/jq-zsh-plugin"
+  "reegnz/jq-zsh-plugin kind:defer"
   "mdumitru/last-working-dir"
   "joshskidmore/zsh-fzf-history-search"
   "jimhester/per-directory-history"
-  "redxtech/zsh-show-path"
-  "trystan2k/zsh-tab-title"
+  "redxtech/zsh-show-path kind:defer"
+  "trystan2k/zsh-tab-title kind:defer"
   "jeffreytse/zsh-vi-mode"
 )
 
@@ -32,7 +31,7 @@ fi
 if ! [ -z $CODESTATS_API_KEY ]; then
   ZDS=$0 debug "Detected CodeStats key. Adding plugin"
   plugins+=(
-    'code-stats/code-stats-zsh, from:gitlab, use:"codestats.plugin.zsh"'
+    'https://gitlab.com/code-stats/code-stats-zsh.git path:codestats.plugin.zsh'
   )
 fi
 
