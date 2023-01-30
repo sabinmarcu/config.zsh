@@ -12,5 +12,6 @@ function triggerUpdate {
 _cleanup triggerUpdate
 
 function zshCustomUpdate {
-  ZSH_CUSTOM_UPDATE=true zsh
+  ZSH_CUSTOM_UPDATE=true exec zsh
+  source $ZSH_CONFIG
 }
