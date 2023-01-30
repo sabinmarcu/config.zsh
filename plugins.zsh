@@ -12,7 +12,7 @@ plugins+=(
   "unixorn/fzf-zsh-plugin"
   "changyuheng/fz kind:defer"
   "rupa/z path:z.sh"
-  "mdumitru/git-aliases"
+  "aeons/omz-git"
   "wfxr/emoji-cli"
   "reegnz/jq-zsh-plugin kind:defer"
   "mdumitru/last-working-dir"
