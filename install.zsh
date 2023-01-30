@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 export ZSH_CUSTOM=${ZSH_CUSTOM:-"$HOME/.zsh_custom"}
 local ZSH_CUSTOM_REPO_SSH_URL="git@github.com:sabinmarcu/zshrc.zplug.git"
