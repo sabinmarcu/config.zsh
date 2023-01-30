@@ -12,5 +12,8 @@ import tools
 import config
 
 _runPlugins
+
+import config.post
+
 _cleanupImportCache
 _runCleanup
