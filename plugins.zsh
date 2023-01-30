@@ -6,7 +6,6 @@ plugins+=(
   "hlissner/zsh-autopair"
   "zsh-users/zsh-autosuggestions"
   "zsh-users/zsh-syntax-highlighting"
-  # "zsh-users/zsh-history-substring-search"
   "fdellwing/zsh-bat kind:defer"
   "zpm-zsh/colorize"
   "unixorn/fzf-zsh-plugin"
