@@ -1,8 +1,8 @@
 #!/bin/bash
 
 export ZSH_CUSTOM=${ZSH_CUSTOM:-"$HOME/.zsh_custom"}
-ZSH_CUSTOM_REPO_SSH_URL="git@github.com:sabinmarcu/zshrc.zplug.git"
-ZSH_CUSTOM_REPO_ARCHIVE_URL="http://github.com/sabinmarcu/zshrc.zplug/archive/master.zip"
+local ZSH_CUSTOM_REPO_SSH_URL="git@github.com:sabinmarcu/zshrc.zplug.git"
+local ZSH_CUSTOM_REPO_ARCHIVE_URL="http://github.com/sabinmarcu/zshrc.zplug/archive/master.zip"
 
 function warn() {
   echo "\033[33m⚠ ${@}\033[0m"
@@ -40,18 +40,24 @@ fi
 echo $(success Installed config)
 echo $(info Linking config)
 
-if [ -e $HOME/.zshrc ]; then
-  echo $(warn $HOME/.zshrc exists. Saving to $HOME/.zshrc.old)
-  mv $HOME/.zshrc $HOME/.zshrc.old
-fi
+function backup() {
+  if [ -e $1 ]; then
+    echo $(warn $1 exists. Saving to $1.old)
+    mv $1 $1.old
+  fi
+}
 
-ln -s $ZSH_CUSTOM/init.zsh $HOME/.zshrc
+local ZSH_RC="$HOME/.zshrc"
+backup $ZSH_RC
+ln -s $ZSH_CUSTOM/init.zsh $ZSH_RC
 
 echo $(success Linked config)
 echo $(info Linking starship config)
 
 mkdir -p $HOME/.config
-ln -s $ZSH_CUSTOM/starship.toml $HOME/.config/starship.toml
+local STARSHIP_RC="$HOME/.config/starship.toml"
+backup $STARSHIP_RC
+ln -s $ZSH_CUSTOM/starship.toml $STARSHIP_RC
 
 echo $(success Linked starship config)
 echo $(success "All done!")
