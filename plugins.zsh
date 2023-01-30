@@ -6,11 +6,11 @@ plugins+=(
   "hlissner/zsh-autopair"
   "zsh-users/zsh-autosuggestions"
   "zsh-users/zsh-syntax-highlighting"
-  "zsh-users/zsh-history-substring-search"
+  # "zsh-users/zsh-history-substring-search"
   "fdellwing/zsh-bat kind:defer"
   "zpm-zsh/colorize"
   "unixorn/fzf-zsh-plugin"
-  "changyuheng/fz"
+  "changyuheng/fz kind:defer"
   "rupa/z path:z.sh"
   "mdumitru/git-aliases"
   "wfxr/emoji-cli"
@@ -21,6 +21,7 @@ plugins+=(
   "redxtech/zsh-show-path kind:defer"
   "trystan2k/zsh-tab-title kind:defer"
   "jeffreytse/zsh-vi-mode"
+  "Aloxaf/fzf-tab"
 )
 
 if command -v pacman &> /dev/null; then
