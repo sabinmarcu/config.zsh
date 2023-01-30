@@ -14,6 +14,12 @@ function _runPlugins {
   local ZSH_PLUGINS=${ZDOTDIR:-$HOME}/.zsh_plugins.zsh
   local ZSH_PLUGINS_SRC=${ZSH_PLUGINS:r}.txt
 
+  ZDS=$ds debug Ensuring plugins compiled file
+  [[ -f $ZSH_PLUGINS ]] || touch $ZSH_PLUGINS
+
+  ZDS=$ds debug Ensuring plugins source file
+  [[ -f $ZSH_PLUGINS_SRC ]] || touch $ZSH_PLUGINS_SRC
+
   if $(shouldUpdate); then
     ZDS=$ds debug Looking for plugins
     if PLUGINS_PATH=$(resolve plugins); then 
@@ -30,9 +36,6 @@ function _runPlugins {
       echo $(warn "Append / Replace the '$(style_text blue underlined -- plugins)$(style_text yellow -- "' variable")")
       return 0
     fi
-
-    ZDS=$ds debug Ensuring plugins source file
-    [[ -f $ZSH_PLUGINS_SRC ]] || touch $ZSH_PLUGINS_SRC
 
     ZDS=$ds debug Setting up antidote autoload
     fpath+=(${ZDOTDIR:-~}/.antidote)
