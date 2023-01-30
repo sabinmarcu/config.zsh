@@ -53,14 +53,6 @@ backup $ZSH_RC
 ln -s $ZSH_CUSTOM/init.zsh $ZSH_RC
 
 echo $(success Linked config)
-echo $(info Linking starship config)
-
-mkdir -p $HOME/.config
-local STARSHIP_RC="$HOME/.config/starship.toml"
-backup $STARSHIP_RC
-ln -s $ZSH_CUSTOM/starship.toml $STARSHIP_RC
-
-echo $(success Linked starship config)
 
 echo $(info Starting first run)
 ZSH_CUSTOM_UPDATE=true zsh
