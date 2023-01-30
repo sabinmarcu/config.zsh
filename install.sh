@@ -1,8 +1,8 @@
 #!/bin/bash
 
 export ZSH_CUSTOM=${ZSH_CUSTOM:-"$HOME/.zsh_custom"}
-ZSH_CUSTOM_REPO_SSH_URL="git@github.com:sabinmarcu/zshrc.plug.git"
-ZSH_CUSTOM_REPO_ARCHIVE_URL"http://github.com/sabinmarcu/zshrc.plug/archive/master.zip"
+ZSH_CUSTOM_REPO_SSH_URL="git@github.com:sabinmarcu/zshrc.zplug.git"
+ZSH_CUSTOM_REPO_ARCHIVE_URL"http://github.com/sabinmarcu/zshrc.zplug/archive/master.zip"
 
 function warn() {
   echo "\033[33m⚠ ${@}\033[0m"
