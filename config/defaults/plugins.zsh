@@ -1,0 +1,1 @@
+bindkey "^j" jq-complete
