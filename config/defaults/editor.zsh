@@ -19,5 +19,5 @@ if command -v vim &> /dev/null; then
 fi
 
 if command -v nvim &> /dev/null; then
-    alias nvimconfig="$EDITOR ~/.config/nvim/lua/user"
+  alias nvimconfig="$EDITOR ${NVIM_CUSTOM:-"$HOME/.config/nvim"}"
 fi
