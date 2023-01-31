@@ -16,8 +16,10 @@ source $ZSH_CUSTOM/core/init.zsh
 
 plugins=()
 
+import config.local.pre
 import tools
 import config
+import config.local.post
 
 _runPlugins
 
