@@ -22,6 +22,7 @@ plugins+=(
   "jeffreytse/zsh-vi-mode"
   "Aloxaf/fzf-tab"
   "cowboyd/zsh-volta"
+  # "lukechilds/zsh-nvm"
   "romkatv/powerlevel10k"
 )
 
@@ -36,6 +37,13 @@ if ! [ -z $CODESTATS_API_KEY ]; then
     'https://gitlab.com/code-stats/code-stats-zsh.git path:codestats.plugin.zsh'
   )
 fi
+
+# if [ -f $HOME/.wakatime.cfg ]; then
+#   ZDS=$0 debug "Detected wakastats. Adding plugin"
+#   plugins+=(
+#     'sobolevn/wakatime-zsh-plugin'
+#   )
+# fi
 
 # if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
 #   ZDS=$0 debug "Detected iTerm. Adding plugin"
