@@ -22,7 +22,7 @@ function _runPlugins {
 
   if $(shouldUpdate); then
     ZDS=$ds debug Looking for plugins
-    if PLUGINS_PATH=$(resolve plugins); then 
+    if PLUGINS_PATH=$(resolve presets.plugins); then 
       ZDS=$ds debug Loading plugins from $PLUGINS_PATH
       source $PLUGINS_PATH
     fi

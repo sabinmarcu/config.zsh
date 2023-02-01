@@ -15,6 +15,7 @@ export ZSH_CUSTOM=$SCRIPT_PATH
 source $ZSH_CUSTOM/core/init.zsh
 
 plugins=()
+tools=()
 
 import config.local.pre
 import tools
@@ -22,6 +23,7 @@ import config
 import config.local.post
 
 _runPlugins
+_runTools
 
 import config.post
 
