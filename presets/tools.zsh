@@ -9,5 +9,5 @@ tools+=(
   fd fd
   jq jq
   gdu gdu
-  bottom bottom
+  btm bottom
 )
