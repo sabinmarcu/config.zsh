@@ -11,7 +11,7 @@ ZDS=$ds debug Loading Antidote
 source ${ANTIDOTE_INIT}
 
 function _runPlugins {
-  local ZSH_PLUGINS=${ZDOTDIR:-$HOME}/.zsh_plugins.zsh
+  local ZSH_PLUGINS=${HOME}/.zsh_plugins.zsh
   local ZSH_PLUGINS_SRC=${ZSH_PLUGINS:r}.txt
 
   ZDS=$ds debug Ensuring plugins compiled file
@@ -38,7 +38,7 @@ function _runPlugins {
     fi
 
     ZDS=$ds debug Setting up antidote autoload
-    fpath+=(${ZDOTDIR:-~}/.antidote)
+    fpath+=($ANTIDOTE_HOME)
     autoload -Uz $fpath[-1]/antidote
 
     ZDS=$ds debug Plugins: ${plugins}
