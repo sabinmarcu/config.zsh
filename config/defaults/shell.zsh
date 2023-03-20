@@ -4,8 +4,11 @@ ZDS=$0 debug Loading shell defaults
 # set -o vi
 
 ZDS=$0 debug Setting sensible pbcopy
-if [[ ! $(command -v pbcopy) &&  $(command -v xclip) ]]; then
+if [[ ! $(command -v pbcopy) && $(command -v xclip) ]]; then
   alias pbcopy="xclip -sel clip"
+fi
+if [[ ! $(command -v pbcopy) && $(command -v xsel) ]]; then
+  alias pbcopy="xsel --clipboard --input"
 fi
 
 ZDS=$0 debug Setting GPG_TTY
