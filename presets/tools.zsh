@@ -1,5 +1,5 @@
 tools+=(
-  nvim nvim
+  nvim neovim
   lazygit lazygit
   bat bat
   fzf fzf
