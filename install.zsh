@@ -1,9 +1,10 @@
 #!/usr/bin/env zsh
 
 export ZSH_CUSTOM=${ZSH_CUSTOM:-"$HOME/.zsh_custom"}
+local ZSH_RC="$HOME/.zshrc"
 local ZSH_CUSTOM_REPO="sabinmarcu/zshrc.custom"
 local ZSH_CUSTOM_REPO_SSH_URL="git@github.com:${ZSH_CUSTOM_REPO}.git"0
-local ZSH_CUSTOM_REPO_HTTP_URL="https://github.com/${ZSH_CUSTOM_REPO}.git"
+local ZSH_CUSTOM_REPO_HTTPS_URL="https://github.com/${ZSH_CUSTOM_REPO}.git"
 local ZSH_CUSTOM_REPO_ARCHIVE_URL="http://github.com/${ZSH_CUSTOM_REPO}/archive/master.zip"
 
 function warn() {
@@ -30,7 +31,7 @@ if [ $(command -v git) ]; then
   if [ $(git clone $ZSH_CUSTOM_REPO_SSH_URL $ZSH_CUSTOM)]; then
     echo $(success "Installation Successful")
   else
-    git clone $ZSH_CUSTOM_REPO_HTTP_URL $ZSH_CUSTOM
+    git clone $ZSH_CUSTOM_REPO_HTTPS_URL $ZSH_CUSTOM
   fi
 else 
   if [ $(command -v curl) ]; then 
@@ -53,7 +54,6 @@ function backup() {
   fi
 }
 
-local ZSH_RC="$HOME/.zshrc"
 backup $ZSH_RC
 ln -s $ZSH_CUSTOM/init.zsh $ZSH_RC
 
