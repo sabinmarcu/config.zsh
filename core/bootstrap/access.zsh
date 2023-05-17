@@ -7,4 +7,3 @@ function access {
   fi
   return 1
 }
-_cleanup access

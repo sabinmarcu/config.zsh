@@ -17,7 +17,6 @@ _zsh_colors_local=(
   lightYellow 93
   lightRed 91
 )
-_cleanup _zsh_colors_local
 
 function zsh_color {
   if result=$(access "_zsh_colors_local" $1); then
@@ -26,4 +25,3 @@ function zsh_color {
   fi
   return 1
 }
-_cleanup zsh_color

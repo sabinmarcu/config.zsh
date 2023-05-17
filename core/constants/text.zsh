@@ -8,7 +8,6 @@ _zsh_text_style_local=(
     underlined 4
     italic 3
 )
-_cleanup _zsh_text_style_local
 
 function zsh_text_style {
   if result=$(access "_zsh_text_style_local" $1); then
@@ -17,4 +16,3 @@ function zsh_text_style {
   fi
   return 1
 }
-_cleanup zsh_text_style

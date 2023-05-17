@@ -17,7 +17,6 @@ _zsh_background_colors_local=(
   bgGreen 42
   bgLightBlue 104
 )
-_cleanup _zsh_background_colors_local
 
 function zsh_background_color {
   if result=$(access "_zsh_background_colors_local" $1); then
@@ -26,4 +25,3 @@ function zsh_background_color {
   fi
   return 1
 }
-_cleanup zsh_background_color

@@ -24,19 +24,15 @@ function style_text {
   fi
   echo "\033[${(j:;:)styles}m${@:(($rest + 1))}\033[0m"
 }
-_cleanup style_text
 
 function error {
   echo $(style_text bgRed -- "❌ $@")
 }
-_cleanup error
 
 function warn {
   echo $(style_text yellow underline -- "⚠ $@")
 }
-_cleanup warn
 
 function info {
   echo $(style_text blue -- " $@")
 }
-_cleanup info
