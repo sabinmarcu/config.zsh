@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
-export ZSH_CUSTOM=${ZSH_CUSTOM:-"$HOME/.zsh_custom"}
+local $XDG_CUSTOM_HOME=${XDG_CUSTOM_HOME:-"$HOME/.config"}
+export ZSH_CUSTOM=${ZSH_CUSTOM:-"$XDG_CUSTOM_HOME/zsh"}
 local ZSH_RC="$HOME/.zshrc"
 local ZSH_CUSTOM_REPO="sabinmarcu/zshrc.custom"
 local ZSH_CUSTOM_REPO_SSH_URL="git@github.com:${ZSH_CUSTOM_REPO}.git"0
