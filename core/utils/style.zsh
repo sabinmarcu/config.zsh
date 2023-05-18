@@ -36,3 +36,7 @@ function warn {
 function info {
   echo $(style_text blue -- " $@")
 }
+
+function success {
+  echo $(style_text green -- "✓ $@")
+}
