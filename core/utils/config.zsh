@@ -109,7 +109,6 @@ function configStatus {
   cd $originalPath
 
   local toPrint=(${(k)unclean} ${(k)notsync})
-  echo $toPrint
   if [ ${#toPrint} -eq 0 ]; then
     success "All configs are clean!"
   else 
