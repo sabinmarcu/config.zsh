@@ -48,6 +48,7 @@ function config {
 
 function cdconfig {
   local list_mode=false
+  local configs
   typeset -A configs=($configPath)
   while getopts ":l" flag; do
     case $flag in
@@ -67,8 +68,39 @@ function cdconfig {
   fi
 }
 
+function configStatus {
+  local configs
+  typeset -A configs=($configPath)
+  local toPrint=()
+  local originalPath=$(pwd)
+  for key value in ${(kv)configs}; do
+    ZDS=$ds debug "Trying $key (@ $value)"
+    if [ -d $value/.git ]; then 
+      ZDS=$ds debug "Processing $key"
+      local files=$(cd $value && git status --porcelain)
+      local shouldAdd=$(if [ -n "$files" ]; then echo 0; else echo 1; fi)
+      ZDS=$ds debug "Exit code: $shouldAdd with files: \n${files}"
+      if [ $shouldAdd -eq 0 ]; then
+        ZDS=$ds debug "Adding $key to list"
+        toPrint+=(
+          $key $value
+        )
+      fi
+    fi
+  done
+  if [ ${#toPrint} -eq 0 ]; then
+    success "All configs are clean!"
+  else 
+    warn "The following configs require your attention"
+    for key value in ${(kv)toPrint}; do
+      echo $(style_text bold -- $key) @ $(style_text dim -- $value)
+    done
+  fi
+}
+
 function _config_autocomplete {
   local -a _descriptions _values
+  local configs
   typeset -A configs=($configList)
   _descriptions=(
     'list all configs'
@@ -80,3 +112,4 @@ function _config_autocomplete {
 
 compdef _config_autocomplete config
 compdef _config_autocomplete cdconfig
+
