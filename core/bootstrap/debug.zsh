@@ -18,10 +18,8 @@ function debug {
     echo ${prefix}${@}
   fi
 }
-_cleanup debug
 
 function debugScope {
   local scope=$(echo $1 | awk -vzshcustom="$ZSH_CUSTOM" '{ sub(zshcustom, ""); sub(/^\/?/, ""); gsub(/\//, ":"); sub(/(:init)?\.zsh$/, ""); print $0 }')
   echo $scope
 }
-_cleanup debugScope
