@@ -9,7 +9,7 @@ for candidatePath in $XDG_CONFIG_HOME/*; do
     ZDS=$ds debug "Analysing $candidatePath"
     local candidate=$(basename $candidatePath)
     local target=$candidatePath
-    local candidateFile=$($findCommand $candidatePath -depth 1 -iname "$candidate.*")
+    local candidateFile=$($findCommand $candidatePath -depth 1 \( -iname "${candidate}.*" -o -iname "${candidate}rc" \))
     if [ ! -z $candidateFile ]; then
       ZDS=$ds debug "Found candidate for config @ $candidateFile$ds debug "Found candidate for config @ $candidateFile$ds debug "Found candidate for config @ $candidateFile$ds debug "Found candidate for config @ $candidateFile""""
       target=$candidateFile
