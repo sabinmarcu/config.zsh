@@ -16,7 +16,6 @@ plugins+=(
   "reegnz/jq-zsh-plugin kind:defer"
   "mdumitru/last-working-dir"
   "joshskidmore/zsh-fzf-history-search"
-  "jimhester/per-directory-history"
   "redxtech/zsh-show-path kind:defer"
   "trystan2k/zsh-tab-title kind:defer"
   "jeffreytse/zsh-vi-mode"
