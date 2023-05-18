@@ -8,9 +8,9 @@ function loadLocalConfig {
   fi
 
   ZDS=$0 debug Looking for extra local configs
-  for ZSH_LOCAL in $HOME/${pre}.zshrc.*.local; do
-    ZDS=$0 debug "Loading extra local config (at: $ZSH_LOCAL)"
-    source $ZSH_LOCAL
+  for localRc in $HOME/${pre}.zshrc.*.local; do
+    ZDS=$0 debug "Loading extra local config (at: $localRc)"
+    source $localRc
   done
 }
 _cleanup loadLocalConfig
