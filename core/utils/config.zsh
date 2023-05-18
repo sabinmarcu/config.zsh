@@ -69,31 +69,59 @@ function cdconfig {
 }
 
 function configStatus {
-  local configs
+  local configs unclean notsync
   typeset -A configs=($configPath)
-  local toPrint=()
   local originalPath=$(pwd)
+
+  typeset -A unclean=()
+  typeset -A notsync=()
+
   for key value in ${(kv)configs}; do
     ZDS=$ds debug "Trying $key (@ $value)"
     if [ -d $value/.git ]; then 
       ZDS=$ds debug "Processing $key"
-      local files=$(cd $value && git status --porcelain)
-      local shouldAdd=$(if [ -n "$files" ]; then echo 0; else echo 1; fi)
-      ZDS=$ds debug "Exit code: $shouldAdd with files: \n${files}"
-      if [ $shouldAdd -eq 0 ]; then
-        ZDS=$ds debug "Adding $key to list"
-        toPrint+=(
+      cd $value
+
+      # Determine if repo is unclean
+      local files=$(git status --porcelain)
+      local hasFiles=$(if [ -n "$files" ]; then echo 0; else echo 1; fi)
+      ZDS=$ds debug "Exit code: $hasFiles with files: \n${files}"
+      if [ $hasFiles -eq 0 ]; then
+        ZDS=$ds debug "Adding $key to unclean list"
+        unclean+=(
           $key $value
+        )
+      fi
+
+      # Determine if repo is unsynced
+      local branch=$(git rev-parse --abbrev-ref HEAD)
+      local commits=$(git rev-list --left-right --count origin/${branch}...${branch} | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}')
+      ZDS=$ds debug "Config $key (branch: $branch), $commits commits out of sync"
+      if [ ! $commits -eq 0 ]; then
+        ZDS=$ds debug "Adding $key to sync list"
+        notsync+=(
+          $key $commits
         )
       fi
     fi
   done
+
+  cd $originalPath
+
+  local toPrint=(${(k)unclean} ${(k)notsync})
+  echo $toPrint
   if [ ${#toPrint} -eq 0 ]; then
     success "All configs are clean!"
   else 
     warn "The following configs require your attention"
-    for key value in ${(kv)toPrint}; do
-      echo $(style_text bold -- $key) @ $(style_text dim -- $value)
+    for key in ${(u)toPrint}; do
+      info " " $(style_text bold -- $key) @ $(style_text dim -- ${configs[$key]})
+      if [[ "${unclean[$key]}" != "" ]]; then
+        echo "  - $(style_text dim -- 'is unclean')"
+      fi
+      if [[ "${notsync[$key]}" != "" ]]; then
+        echo "  - $(style_text dim -- 'is not synced')"
+      fi
     done
   fi
 }
