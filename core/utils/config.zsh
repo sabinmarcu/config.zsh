@@ -26,20 +26,34 @@ for candidatePath in $XDG_CONFIG_HOME/*; do
 done
 
 function config {
-  local list_mode=false
+  local list_mode=false within=false
   typeset -A configs=($configList)
-  while getopts ":l" flag; do
-    case $flag in
-      l) list_mode=true;;
-    esac
+
+  args=()
+  while [ $OPTIND -le "$#" ]; do
+    if getopts ":lw" option; then
+      case $option in
+        l) list_mode=true;;
+        w) within=true;;
+      esac
+    else
+      args+=(${@:$OPTIND:1})
+      ((OPTIND++))
+    fi
   done
+
   if [ $list_mode = true ]; then
     info "Supported configs are:"
     echo ${(k)configs}
   else
-    local request=${1}
+    local request=${args:0:1}
+    local tool=${${args:1:1}:-"$EDITOR"}
     if [ ! -z $configs[$request] ]; then
-      $EDITOR $configs[$request]
+      if [ $within = true ]; then
+        (cd $configs[$request] && $tool)
+      else 
+        $tool $configs[$request]
+      fi
     else
       error "No such config found ($request)"
     fi
