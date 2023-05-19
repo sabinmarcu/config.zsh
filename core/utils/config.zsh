@@ -60,28 +60,6 @@ function config {
   fi
 }
 
-function cdconfig {
-  local list_mode=false
-  local configs
-  typeset -A configs=($configPath)
-  while getopts ":l" flag; do
-    case $flag in
-      l) list_mode=true;;
-    esac
-  done
-  if [ $list_mode = true ]; then
-    info "Supported configs are:"
-    echo ${(k)configs}
-  else
-    local request=${1}
-    if [ ! -z $configs[$request] ]; then
-      cd $configs[$request]
-    else
-      error "No such config found ($request)"
-    fi
-  fi
-}
-
 function configStatus {
   local configs unclean notsync
   typeset -A configs=($configPath)
