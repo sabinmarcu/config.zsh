@@ -28,6 +28,7 @@ done
 function config {
   local list_mode=false within=false
   typeset -A configs=($configList)
+  typeset -A paths=($configPath)
 
   args=()
   while [ $OPTIND -le "$#" ]; do
@@ -50,8 +51,10 @@ function config {
     local tool=${${args:1:1}:-"$EDITOR"}
     if [ ! -z $configs[$request] ]; then
       if [ $within = true ]; then
-        (cd $configs[$request] && $tool)
-      else 
+        (cd $paths[$request] && $tool)
+      elif [ ! $tool = $EDITOR ]; then
+        $tool $paths[$request]
+      else
         $tool $configs[$request]
       fi
     else
