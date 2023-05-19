@@ -1,8 +1,8 @@
 local ds=$(debugScope $0)
 local findCommand=/usr/bin/find
 
-configList=()
-configPath=()
+_config_list=()
+_config_path=()
 for candidatePath in $XDG_CONFIG_HOME/*; do 
   ZDS=$ds debug "Finding configs in $XDG_CONFIG_HOME"
   if [ -d $candidatePath ]; then
@@ -15,11 +15,11 @@ for candidatePath in $XDG_CONFIG_HOME/*; do
       target=$candidateFile
     fi
     ZDS=$ds debug "Exporting config path $candidate => $candidatePath"
-    configPath+=(
+    _config_path+=(
       $candidate $candidatePath
     )
     ZDS=$ds debug "Exporting config $candidate => $target"
-    configList+=(
+    _config_list+=(
       $candidate $target
     )
   fi
@@ -27,8 +27,8 @@ done
 
 function config {
   local list_mode=false within=false
-  typeset -A configs=($configList)
-  typeset -A paths=($configPath)
+  typeset -A configs=($_config_list)
+  typeset -A paths=($_config_path)
 
   args=()
   while [ $OPTIND -le "$#" ]; do
@@ -65,7 +65,7 @@ function config {
 
 function configStatus {
   local configs unclean notsync
-  typeset -A configs=($configPath)
+  typeset -A configs=($_config_path)
   local originalPath=$(pwd)
 
   typeset -A unclean=()
@@ -123,7 +123,7 @@ function configStatus {
 function _config_autocomplete {
   local -a _descriptions _values
   local configs
-  typeset -A configs=($configList)
+  typeset -A configs=($_config_list)
   _descriptions=(
     'list all configs'
   )
