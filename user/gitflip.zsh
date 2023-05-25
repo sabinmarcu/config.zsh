@@ -1,4 +1,4 @@
-function gitflip() {
+function ggflip() {
   local currentOrigin=$(git remote -v | grep origin | awk '$1=$1' | cut -d " " -f2 | uniq)
   local shortHand=$(echo $currentOrigin | sed -E 's/.*(\/|:)([^\/]+\/[^\/]+).git$/\2/')
   local host=$(echo $currentOrigin | sed -E 's/(git@|https:\/\/)([^\/:]+)[\/:].*/\2/')
