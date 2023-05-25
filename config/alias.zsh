@@ -6,3 +6,6 @@ alias zshr="source $ZSH_CONFIG"
 alias zshconfig="$EDITOR $ZSH_CUSTOM"
 
 alias lg="lazygit"
+if command -v nvim &> /dev/null; then
+  alias vimdiff="nvim -d"
+fi
