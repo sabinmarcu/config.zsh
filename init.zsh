@@ -26,6 +26,7 @@ _runPlugins
 _runTools
 
 import config.post
+import user
 
 _cleanupImportCache
 _runCleanup
