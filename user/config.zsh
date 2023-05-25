@@ -52,6 +52,8 @@ function config {
     if [ ! -z $configs[$request] ]; then
       if [ $within = true ]; then
         (cd $paths[$request] && $tool)
+      elif [ $tool = "cd" ]; then
+        cd $paths[$request]
       elif [ ! $tool = $EDITOR ]; then
         (cd $paths[$request] && $tool $paths[$request])
       else
