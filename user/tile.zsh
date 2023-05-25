@@ -1,5 +1,5 @@
 
-if command -v yabai && command -v skhd &> /dev/null; then
+if command -v yabai &> /dev/null && command -v skhd &> /dev/null; then
   function tile {
     case $1 in
       restart)
