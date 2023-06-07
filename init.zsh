@@ -1,9 +1,9 @@
 if ! [ -z $ZSH_CUSTOM_UPDATE ]; then
   echo "\033[2;34m Updating plugins and tools\033[0m"
 else
-  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-  fi
+#   if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+#   fi
 fi
 
 local SOURCE_PATH=${(%):-%N} || $0
