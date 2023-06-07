@@ -22,7 +22,7 @@ plugins+=(
   "Aloxaf/fzf-tab"
   "cowboyd/zsh-volta"
   "romkatv/powerlevel10k"
-  "hyperupcall/autoenv path:activate.sh"
+  "ptavares/zsh-direnv"
 )
 
 if command -v pacman &> /dev/null; then
