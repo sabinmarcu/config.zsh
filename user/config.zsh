@@ -1,41 +1,31 @@
 local ds=$(debugScope $0)
 local findCommand=/usr/bin/find
 
-_config_list=()
 _config_path=()
 for candidatePath in $XDG_CONFIG_HOME/*; do 
   ZDS=$ds debug "Finding configs in $XDG_CONFIG_HOME"
   if [ -d $candidatePath ]; then
-    ZDS=$ds debug "Analysing $candidatePath"
-    local candidate=$(basename $candidatePath)
-    local target=$candidatePath
-    local candidateFile=$($findCommand $candidatePath -depth 1 \( -iname "${candidate}.*" -o -iname "${candidate}rc" \))
-    if [ ! -z $candidateFile ]; then
-      ZDS=$ds debug "Found candidate for config @ $candidateFile$ds debug "Found candidate for config @ $candidateFile$ds debug "Found candidate for config @ $candidateFile$ds debug "Found candidate for config @ $candidateFile""""
-      target=$candidateFile
+    if [ -d $candidatePath/.git ]; then
+      ZDS=$ds debug "Analysing $candidatePath"
+      local candidate=$(basename $candidatePath)
+      ZDS=$ds debug "Exporting config path $candidate => $candidatePath"
+      _config_path+=(
+        $candidate $candidatePath
+      )
     fi
-    ZDS=$ds debug "Exporting config path $candidate => $candidatePath"
-    _config_path+=(
-      $candidate $candidatePath
-    )
-    ZDS=$ds debug "Exporting config $candidate => $target"
-    _config_list+=(
-      $candidate $target
-    )
   fi
 done
 
 function config {
-  local list_mode=false within=false
-  typeset -A configs=($_config_list)
+  local list_mode=false status_mode=false
   typeset -A paths=($_config_path)
 
   args=()
   while [ $OPTIND -le "$#" ]; do
-    if getopts ":lw" option; then
+    if getopts ":ls" option; then
       case $option in
         l) list_mode=true;;
-        w) within=true;;
+        s) status_mode=true;;
       esac
     else
       args+=(${@:$OPTIND:1})
@@ -45,19 +35,17 @@ function config {
 
   if [ $list_mode = true ]; then
     info "Supported configs are:"
-    echo ${(k)configs}
+    echo ${(k)paths}
+  elif [ $status_mode = true ]; then
+    configStatus
   else
     local request=${args:0:1}
     local tool=${${args:1:1}:-"$EDITOR"}
-    if [ ! -z $configs[$request] ]; then
-      if [ $within = true ]; then
-        (cd $paths[$request] && $tool)
-      elif [ $tool = "cd" ]; then
+    if [ ! -z $paths[$request] ]; then
+      if [ $tool = "cd" ]; then
         cd $paths[$request]
-      elif [ ! $tool = $EDITOR ]; then
-        (cd $paths[$request] && $tool $paths[$request])
       else
-        (cd $paths[$request] && $tool $configs[$request])
+        (cd $paths[$request] && $tool)
       fi
     else
       error "No such config found ($request)"
@@ -125,7 +113,7 @@ function configStatus {
 function _config_autocomplete {
   local -a _descriptions _values
   local configs
-  typeset -A configs=($_config_list)
+  typeset -A configs=($_config_path)
   _descriptions=(
     'list all configs'
   )
