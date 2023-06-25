@@ -112,16 +112,25 @@ function configStatus {
 
 function _config_autocomplete {
   local -a _descriptions _values
-  local configs
-  typeset -A configs=($_config_path)
-  _descriptions=(
-    'list all configs'
-  )
-  _values=('-l')
-  _values+=(${(k)configs})
+  if [ ${#words} -gt 2 ]; then 
+    local exclude=$(compgen -abkA function | sort)
+    local executables=$(
+        comm -23 <(compgen -c) <(echo $exclude)
+        type -tP $( comm -12 <(compgen -c) <(echo $exclude) )
+    )
+    local executables=( $(compgen -W "$executables" -- ${COMP_WORDS[COMP_CWORD]}) )
+    _values+=($executables)
+  else
+    local configs
+    typeset -A configs=($_config_path)
+    _descriptions=(
+      'list all configs'
+      'get status of configs'
+    )
+    _values=('-l' '-s')
+    _values+=(${(k)configs})
+  fi
   compadd -d _descriptions -a _values
 }
 
 compdef _config_autocomplete config
-compdef _config_autocomplete cdconfig
-
