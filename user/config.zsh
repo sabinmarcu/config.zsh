@@ -3,7 +3,7 @@ local findCommand=/usr/bin/find
 
 _config_path=()
 for candidatePath in $XDG_CONFIG_HOME/*; do 
-  ZDS=$ds debug "Finding configs in $XDG_CONFIG_HOME"
+  ZDS=$ds debug "Finding configs in $candidatePath"
   if [ -d $candidatePath ]; then
     if [ -d $candidatePath/.git ]; then
       ZDS=$ds debug "Analysing $candidatePath"
@@ -17,15 +17,16 @@ for candidatePath in $XDG_CONFIG_HOME/*; do
 done
 
 function config {
-  local list_mode=false status_mode=false
+  local mode="default"
   typeset -A paths=($_config_path)
 
   args=()
   while [ $OPTIND -le "$#" ]; do
-    if getopts ":ls" option; then
+    if getopts ":uls" option; then
       case $option in
-        l) list_mode=true;;
-        s) status_mode=true;;
+        l) mode="list";;
+        s) mode="status";;
+        u) mode="update";;
       esac
     else
       args+=(${@:$OPTIND:1})
@@ -33,24 +34,93 @@ function config {
     fi
   done
 
-  if [ $list_mode = true ]; then
-    info "Supported configs are:"
-    echo ${(k)paths}
-  elif [ $status_mode = true ]; then
-    configStatus
-  else
-    local request=${args:0:1}
-    local tool=${${args:1:1}:-"$EDITOR"}
-    if [ ! -z $paths[$request] ]; then
+  ZDS=$ds debug "Mode: $mode"
+
+  case $mode in
+    list) 
+        info "Supported configs are:"
+        echo ${(k)paths}
+      ;;
+    status)
+        configStatus
+      ;;
+    update)
+        configUpdate
+      ;;
+    *)
+      local request=${args:0:1}
+      local tool=${${args:1:1}:-"$EDITOR"}
+      if [ -z $paths[$request] ]; then
+        error "No such config found ($request)"
+        return 1
+      fi
       if [ $tool = "cd" ]; then
         cd $paths[$request]
       else
         (cd $paths[$request] && eval "$tool")
       fi
-    else
-      error "No such config found ($request)"
-    fi
+    ;;
+  esac
+}
+
+function configUpdateOne {
+  typeset -A configs=($_config_path)
+  local request=$1
+  local configPath=$configs[$request]
+  if [ -z $configPath ]; then
+    error "No such config found ($request)"
+    return 1
   fi
+  ZDS=$ds debug "Updating $configPath $request"
+  local originalPath=$(pwd)
+  cd $configPath
+  echo "BEFORE"
+  git pull
+  returnValue=$?
+  echo "DONE"
+  echo "RETURNVALUE=$returnValue"
+  cd $originalPath &> /dev/null
+  return $returnValue
+}
+
+function configUpdate {
+  typeset -A configs=($_config_path)
+  local output=$(CONFIG_PRINT_NL=true configStatus)
+  local unclean=( $(echo $output | awk 'NR==1') )
+  local uptodate=( $(echo $output | awk 'NR==2  ') )
+  local sum=$((${#unclean}+${#uptodate}))
+  if [ $sum -eq ${#configs} ]; then
+    success "Your packages are up to date"
+    if [ ${#unclean} -gt 0 ]; then
+      warn "Although the following are modified:"
+      for config in $unclean; do
+        echo "  - $(style_text dim -- $config)"
+      done
+    fi
+    return 0
+  fi
+  info "Updating configs"
+  for key value in ${(kv)configs}; do
+    if ! (($uptodate[(Ie)$key])); then
+      if (($unclean[(Ie)$key])); then
+        warn "Config for $key ($value) is modified. Refusing to update"
+      else
+        info "Updating $key"
+        trap 'rm -f $outFile' 0;
+        outFile=$(mktemp)
+        configUpdateOne $key &> $outFile
+        local result=$?
+        output=$(cat $outFile)
+        if ! [ $result -eq 0 ]; then
+          error "There has been an error updating $key ($value)"
+          echo $output
+        else
+          success "Updated $key"
+        fi
+      fi
+    fi
+  done
+  info "Done"
 }
 
 function configStatus {
@@ -60,6 +130,8 @@ function configStatus {
 
   typeset -A unclean=()
   typeset -A notsync=()
+  local notuptodate=()
+  local uptodate=()
 
   for key value in ${(kv)configs}; do
     ZDS=$ds debug "Trying $key (@ $value)"
@@ -73,6 +145,7 @@ function configStatus {
       ZDS=$ds debug "Exit code: $hasFiles with files: \n${files}"
       if [ $hasFiles -eq 0 ]; then
         ZDS=$ds debug "Adding $key to unclean list"
+        notuptodate+=($key)
         unclean+=(
           $key $value
         )
@@ -80,9 +153,17 @@ function configStatus {
 
       # Determine if repo is unsynced
       local branch=$(git rev-parse --abbrev-ref HEAD)
-      local commits=$(git rev-list --left-right --count origin/${branch}...${branch} | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}')
+      local commits=$(git rev-list --left-right --count origin/${branch}...${branch})
+      local local=$(echo $commits | awk '{print $2}')
+      local total=$(echo $commits | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}')
       ZDS=$ds debug "Config $key (branch: $branch), $commits commits out of sync"
-      if [ ! $commits -eq 0 ]; then
+      if [ ! $local -eq 0 ]; then
+        ZDS=$ds debug "Adding $key to update reject"
+        notuptodate+=($key)
+      fi
+      if [ $total -eq 0 ]; then
+        uptodate+=($key)
+      else
         ZDS=$ds debug "Adding $key to sync list"
         notsync+=(
           $key $commits
@@ -92,6 +173,15 @@ function configStatus {
   done
 
   cd $originalPath
+
+  if ! [ -z $CONFIG_PRINT_NL ]; then
+    if [ ${#notuptodate} -eq 0 ]; then
+      return 0
+    fi
+    echo $notuptodate | sed 's/ /\n/g' | sort | uniq
+    echo $uptodate
+    return 1
+  fi
 
   local toPrint=(${(k)unclean} ${(k)notsync})
   if [ ${#toPrint} -eq 0 ]; then
@@ -126,8 +216,9 @@ function _config_autocomplete {
     _descriptions=(
       'list all configs'
       'get status of configs'
+      'update configs'
     )
-    _values=('-l' '-s')
+    _values=('-l' '-s' '-u')
     _values+=(${(k)configs})
   fi
   compadd -d _descriptions -a _values
