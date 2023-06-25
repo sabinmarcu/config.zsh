@@ -74,11 +74,8 @@ function configUpdateOne {
   ZDS=$ds debug "Updating $configPath $request"
   local originalPath=$(pwd)
   cd $configPath
-  echo "BEFORE"
   git pull
   returnValue=$?
-  echo "DONE"
-  echo "RETURNVALUE=$returnValue"
   cd $originalPath &> /dev/null
   return $returnValue
 }
