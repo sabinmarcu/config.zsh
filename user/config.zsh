@@ -45,7 +45,7 @@ function config {
       if [ $tool = "cd" ]; then
         cd $paths[$request]
       else
-        (cd $paths[$request] && $tool)
+        (cd $paths[$request] && eval "$tool")
       fi
     else
       error "No such config found ($request)"
