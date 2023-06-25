@@ -15,7 +15,7 @@ function debug {
       fi
       prefix="\033[2m[$scope]\033[0m "
     fi
-    echo ${prefix}${@}
+    >&2 echo ${prefix}${@}
   fi
 }
 
