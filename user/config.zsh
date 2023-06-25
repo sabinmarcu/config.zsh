@@ -83,8 +83,13 @@ function configUpdateOne {
 function configUpdate {
   typeset -A configs=($_config_path)
   local output=$(CONFIG_PRINT_NL=true configStatus)
+  local code=$?
+  ZDS=$ds debug "Output: $output (code: $code)"
   local unclean=( $(echo $output | awk 'NR==1') )
   local uptodate=( $(echo $output | awk 'NR==2  ') )
+  ZDS=$ds debug "Update unclean: ${#unclean}"
+  ZDS=$ds debug "Update uptodate: ${#uptodate}"
+  ZDS=$ds debug "Total configs: ${#configs}"
   local sum=$((${#unclean}+${#uptodate}))
   if [ $sum -eq ${#configs} ]; then
     success "Your packages are up to date"
