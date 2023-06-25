@@ -9,8 +9,6 @@ plugins+=(
   "fdellwing/zsh-bat kind:defer"
   "zpm-zsh/colorize"
   "unixorn/fzf-zsh-plugin"
-  "changyuheng/fz kind:defer"
-  "rupa/z path:z.sh"
   "aeons/omz-git"
   "wfxr/emoji-cli"
   "reegnz/jq-zsh-plugin kind:defer"
@@ -41,6 +39,13 @@ if [ -f $HOME/.wakatime.cfg ]; then
   ZDS=$0 debug "Detected wakastats. Adding plugin"
   plugins+=(
     'sobolevn/wakatime-zsh-plugin'
+  )
+fi
+
+if ! command -v zoxide &> /dev/null; then
+  plugins+=(  
+    "changyuheng/fz kind:defer"
+    "rupa/z path:z.sh"
   )
 fi
 

@@ -10,6 +10,7 @@ tools+=(
   jq jq
   gdu gdu
   btm bottom
+  zoxide zoxide
 )
 
 if command -v pacman &> /dev/null; then
