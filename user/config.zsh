@@ -214,9 +214,9 @@ function _config_autocomplete {
     local configs
     typeset -A configs=($_config_path)
     _descriptions=(
-      'list all configs'
-      'get status of configs'
-      'update configs'
+      '-l list all configs'
+      '-s get status of configs'
+      '-u update configs'
     )
     _values=('-l' '-s' '-u')
     _values+=(${(k)configs})
