@@ -1,7 +1,7 @@
 local ds=$(debugScope $0)
 export SSH_ENV="$HOME/.ssh/agent-environment"
 
-local function start_agent {
+function start_agent {
     ZDS=$ds debug "Initialising new SSH agent..."
     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
     ZDS=$ds debug succeeded
