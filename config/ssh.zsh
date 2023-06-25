@@ -3,11 +3,11 @@ export SSH_ENV="$HOME/.ssh/agent-environment"
 
 function start_agent {
     ZDS=$ds debug "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    $(which ssh-agent) | sed 's/^echo/#echo/' > "${SSH_ENV}"
     ZDS=$ds debug succeeded
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
+    $(which ssh-add);
 }
 
 if [ -f "${SSH_ENV}" ]; then
