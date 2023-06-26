@@ -74,7 +74,8 @@ function configUpdateOne {
   ZDS=$ds debug "Updating $configPath $request"
   local originalPath=$(pwd)
   cd $configPath
-  git pull
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  git pull origin $branch
   returnValue=$?
   cd $originalPath &> /dev/null
   return $returnValue
@@ -85,37 +86,22 @@ function configUpdate {
   output=$(CONFIG_PRINT_NL=true configStatus)
   local code=$?
   ZDS=$ds debug "Output: $output (code: $code)"
-  local needupdate=( $(echo $output | awk 'NR==1') )
-  local refuseupdate=( $(echo $output | awk 'NR==2') )
-  ZDS=$ds debug "Update needs: ${#needupdate} <${needupdate}>" 
+  local refuseupdate=( $(echo $output) )
   ZDS=$ds debug "Update refuse: ${#refuseupdate} <$refuseupdate>"
-  if [ $code -eq 0 ] || ( [ ${#needupdate} -eq 0 ] && [ ${#refuseupdate} -gt 0 ] ); then
-    success "Your configs are up to date with remote"
-    if [ ${#refuseupdate} -gt 0 ]; then
-      warn "Although the following are modified:"
-      for config in $refuseupdate; do
-        echo "  - $(style_text dim -- $config)"
-      done
-    fi
-    return 0
-  fi
   info "Updating configs"
   for key value in ${(kv)configs}; do
     if (($refuseupdate[(Ie)$key])); then
       warn "Config for $key ($value) is modified. Refusing to update"
     else
-      ZDS=$ds debug "Checking if $key needs update"
-      if (($needupdate[(Ie)$key])); then
-        ZDS=$ds debug "Config $key is not up to date"
-        info "Updating $key"
-        output=$(configUpdateOne $key)
-        local result=$?
-        if ! [ $result -eq 0 ]; then
-          error "There has been an error updating $key ($value)"
-          echo $output
-        else
-          success "Updated $key"
-        fi
+      ZDS=$ds debug "Config $key is not up to date"
+      info "Updating $key"
+      output=$(configUpdateOne $key)
+      local result=$?
+      if ! [ $result -eq 0 ]; then
+        error "There has been an error updating $key ($value)"
+        echo $output
+      else
+        success "Updated $key"
       fi
     fi
   done
@@ -129,7 +115,6 @@ function configStatus {
 
   typeset -A unclean=()
   typeset -A notsync=()
-  local needupdate=()
 
   for key value in ${(kv)configs}; do
     ZDS=$ds debug "Trying $key (@ $value)"
@@ -150,15 +135,9 @@ function configStatus {
 
       # Determine if repo is unsynced
       local branch=$(git rev-parse --abbrev-ref HEAD)
-      local commits=$(git rev-list --left-right --count origin/${branch}...${branch})
-      local remote=$(echo $commits | awk '{print $1}')
-      local local=$(echo $commits | awk '{print $2}')
-      local total=$(echo $commits | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}')
+      local commits=$(git rev-list --left-right --count origin/${branch}...${branch} | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}')
       ZDS=$ds debug "Config $key (branch: $branch), $commits commits out of sync"
-      if [ $local -eq 0 ] && [ $remote -gt 0 ]; then
-        needupdate+=($key)
-      fi
-      if ! [ $total -eq 0 ]; then
+      if ! [ $commits -eq 0 ]; then
         ZDS=$ds debug "Adding $key to sync list"
         notsync+=(
           $key $commits
@@ -170,20 +149,9 @@ function configStatus {
   cd $originalPath
 
   if ! [ -z $CONFIG_PRINT_NL ]; then
-    local cantupdateInitial=(${(k)unclean} ${(k)notsync})
-    local cantupdate=()
-    for key in $cantupdateInitial; do
-      if ! ((${needupdate[(Ie)$key]})); then
-        cantupdate+=($key)
-      fi
-    done
-    local all=($needupdate $cantupdate)
-    if [ ${#all} -eq 0 ]; then
-      return 0
-    fi
-    echo $needupdate
+    local cantupdate=(${(k)unclean} ${(k)notsync})
     echo $cantupdate | sed 's/ /\n/g' | sort | uniq | tr -s "\n" " "
-    return 1
+    return 0
   fi
 
   local toPrint=(${(k)unclean} ${(k)notsync})
