@@ -87,7 +87,7 @@ function configUpdate {
   ZDS=$ds debug "Output: $output (code: $code)"
   local unclean=( $(echo $output | awk 'NR==1') )
   local uptodate=( $(echo $output | awk 'NR==2  ') )
-  local allStatus=$(echo $unclean $uptodate | sed 's/ /\n/g' | sort | uniq  )
+  local allStatus=( $(echo $unclean $uptodate | sed 's/ /\n/g' | sort | uniq) )
   ZDS=$ds debug "Update unclean: ${#unclean} <${unclean}>" 
   ZDS=$ds debug "Update uptodate: ${#uptodate} <$uptodate>"
   ZDS=$ds debug "Total status: ${#allStatus} configs: ${#configs}"
