@@ -89,7 +89,7 @@ function configUpdate {
   local refuseupdate=( $(echo $output | awk 'NR==2') )
   ZDS=$ds debug "Update needs: ${#needupdate} <${needupdate}>" 
   ZDS=$ds debug "Update refuse: ${#refuseupdate} <$refuseupdate>"
-  if [ $code -eq 0 ] || [ ${#needupdate} -eq 0 ] && [ ${#refuseupdate} -gt 0 ]; then
+  if [ $code -eq 0 ] || ( [ ${#needupdate} -eq 0 ] && [ ${#refuseupdate} -gt 0 ] ); then
     success "Your configs are up to date with remote"
     if [ ${#refuseupdate} -gt 0 ]; then
       warn "Although the following are modified:"
