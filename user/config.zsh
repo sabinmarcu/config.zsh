@@ -82,16 +82,16 @@ function configUpdateOne {
 
 function configUpdate {
   typeset -A configs=($_config_path)
-  local output=$(CONFIG_PRINT_NL=true configStatus)
+  output=$(CONFIG_PRINT_NL=true configStatus)
   local code=$?
   ZDS=$ds debug "Output: $output (code: $code)"
   local unclean=( $(echo $output | awk 'NR==1') )
   local uptodate=( $(echo $output | awk 'NR==2  ') )
-  ZDS=$ds debug "Update unclean: ${#unclean}"
-  ZDS=$ds debug "Update uptodate: ${#uptodate}"
-  ZDS=$ds debug "Total configs: ${#configs}"
-  local sum=$((${#unclean}+${#uptodate}))
-  if [ $sum -eq ${#configs} ]; then
+  local allStatus=$(echo $unclean $uptodate | sed 's/ /\n/g' | sort | uniq  )
+  ZDS=$ds debug "Update unclean: ${#unclean} <${unclean}>" 
+  ZDS=$ds debug "Update uptodate: ${#uptodate} <$uptodate>"
+  ZDS=$ds debug "Total status: ${#allStatus} configs: ${#configs}"
+  if [ $code -eq 0 ] || [ ${#allStatus} -eq ${#configs} ]; then
     success "Your packages are up to date"
     if [ ${#unclean} -gt 0 ]; then
       warn "Although the following are modified:"
@@ -103,16 +103,15 @@ function configUpdate {
   fi
   info "Updating configs"
   for key value in ${(kv)configs}; do
-    if ! (($uptodate[(Ie)$key])); then
-      if (($unclean[(Ie)$key])); then
-        warn "Config for $key ($value) is modified. Refusing to update"
-      else
+    if (($unclean[(Ie)$key])); then
+      warn "Config for $key ($value) is modified. Refusing to update"
+    else
+      ZDS=$ds debug "Checking if $key needs update"
+      if ! (($uptodate[(Ie)$key])); then
+        ZDS=$ds debug "Config $key is not up to date"
         info "Updating $key"
-        trap 'rm -f $outFile' 0;
-        outFile=$(mktemp)
-        configUpdateOne $key &> $outFile
+        output=$(configUpdateOne $key)
         local result=$?
-        output=$(cat $outFile)
         if ! [ $result -eq 0 ]; then
           error "There has been an error updating $key ($value)"
           echo $output
