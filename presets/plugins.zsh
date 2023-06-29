@@ -22,6 +22,7 @@ plugins+=(
   "romkatv/powerlevel10k"
   "ptavares/zsh-direnv"
   "sabinmarcu/dvm.zsh"
+  "sabinmarcu/term-theme.zsh"
 )
 
 if command -v pacman &> /dev/null; then
