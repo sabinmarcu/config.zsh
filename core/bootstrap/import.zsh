@@ -12,6 +12,10 @@ function zsh_resolve {
     echo $1.zsh
   elif [ -f $1/init.zsh ]; then
     echo $1/init.zsh 
+  elif toExpand=$(echo "$1" | grep "\*$"); then
+    for file in $~=toExpand; do 
+      echo $file
+    done
   else
     return 1
   fi
@@ -20,7 +24,7 @@ function zsh_resolve {
 _cleanup zsh_resolve
 
 declare -A cache
-function zsh_import {
+function zsh_import_one {
   if importPath=$(zsh_resolve "$1"); then
     if ! (($+cache[$importPath])); then
       ZDS=$ds debug importing $importPath
@@ -32,6 +36,16 @@ function zsh_import {
     return 1
   fi
   return 0
+}
+_cleanup zsh_import_one
+
+function zsh_import {
+  ZDS=$ds debug importing all $@
+  local toImport=($@)
+  for importPath in $toImport; do
+    ZDS=$ds debug importing one $importPath
+    zsh_import_one $importPath
+  done
 }
 _cleanup zsh_import
 
@@ -54,7 +68,7 @@ _cleanup resolve
 
 function import {
   if resolution=$(resolve $1); then
-    zsh_import $resolution
+    zsh_import $(echo $resolution | tr "\n" " ")
     return 0
   else
     errorPath $1 "is not a valid module"
