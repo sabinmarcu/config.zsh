@@ -21,6 +21,7 @@ plugins+=(
   "cowboyd/zsh-volta"
   "romkatv/powerlevel10k"
   "ptavares/zsh-direnv"
+  "sabinmarcu/dvm.zsh"
 )
 
 if command -v pacman &> /dev/null; then
