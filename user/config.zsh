@@ -64,6 +64,7 @@ function config {
 }
 
 function configUpdateOne {
+  local GIT_SSH_COMMAND=${CONFIG_UPDATE_SSH_COMMAND:-'ssh'}
   typeset -A configs=($_config_path)
   local request=$1
   local configPath=$configs[$request]
@@ -75,7 +76,7 @@ function configUpdateOne {
   local originalPath=$(pwd)
   cd $configPath
   local branch=$(git rev-parse --abbrev-ref HEAD)
-  git pull origin $branch
+  GIT_SSH_COMMAND=${GIT_SSH_COMMAND} git pull origin $branch
   returnValue=$?
   cd $originalPath &> /dev/null
   return $returnValue
@@ -94,12 +95,14 @@ function configUpdate {
       warn "Config for $key ($value) is modified. Refusing to update"
     else
       ZDS=$ds debug "Config $key is not up to date"
-      info "Updating $key"
-      output=$(configUpdateOne $key)
+      output=$(configUpdateOne $key 2>&1)
       local result=$?
+      local upToDate=$(echo $output | grep "Already up to date.")
       if ! [ $result -eq 0 ]; then
         error "There has been an error updating $key ($value)"
         echo $output
+      elif [ -n $upToDate ]; then
+        success "$key already up to date"
       else
         success "Updated $key"
       fi
