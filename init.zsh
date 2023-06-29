@@ -25,8 +25,10 @@ import config.local.post
 _runPlugins
 _runTools
 
-import config.post
-import user
+import config.post.*
+import user.*
 
 _cleanupImportCache
 _runCleanup
+export DVM_DIR="/Users/sabinmarcu/.dvm"
+export PATH="$DVM_DIR/bin:$PATH"
