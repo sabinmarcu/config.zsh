@@ -8,7 +8,7 @@ tools+=(
   eza eza
   fd fd
   jq jq
-  gdu gdu
+  gdu-go gdu
   btm bottom
   zoxide zoxide
 )
