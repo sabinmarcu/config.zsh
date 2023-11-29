@@ -56,8 +56,10 @@ function config {
       fi
       if [ $tool = "cd" ]; then
         cd $paths[$request]
-      else
+      elif [ $tool = "nvim" ]; then
         (cd $paths[$request] && eval "$tool")
+      else
+        (cd $paths[$request] && eval "$tool .")
       fi
     ;;
   esac
