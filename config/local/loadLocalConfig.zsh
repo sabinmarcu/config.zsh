@@ -1,5 +1,5 @@
 function loadLocalConfig {
-  local pre=${1:-""}
+  local pre=${1:-"pre"}
 
   ZDS=$0 debug Looking for local config
   if [ -e $HOME/${1}.zshrc.local ]; then
