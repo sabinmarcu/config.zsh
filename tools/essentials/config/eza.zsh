@@ -1,12 +1,12 @@
-_exa_ignore=(
+_eza_ignore=(
   "*node_modules*"
 )
-function __exa_ignores {
-  echo ${(j:|:)_exa_ignore}
+function __eza_ignores {
+  echo ${(j:|:)_eza_ignore}
 }
 export TIME_STYLE="${TIME_STYLE:-long-iso}"
 
-alias ls="exa -Fgh --color-scale --git --group-directories-first --icons --ignore-glob=\"$(__exa_ignores)\""
+alias ls="eza -Fgh --color-scale --git --group-directories-first --icons --ignore-glob=\"$(__eza_ignores)\""
 alias l.='ls -d .*'
 alias lD='ls -D'
 alias lS='ls -1'

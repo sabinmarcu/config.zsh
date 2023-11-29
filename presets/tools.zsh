@@ -5,7 +5,7 @@ tools+=(
   fzf fzf
   rg ripgrep
   delta git-delta
-  exa exa
+  eza eza
   fd fd
   jq jq
   gdu gdu
