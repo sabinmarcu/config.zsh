@@ -18,7 +18,6 @@ plugins+=(
   "trystan2k/zsh-tab-title kind:defer"
   "jeffreytse/zsh-vi-mode"
   "Aloxaf/fzf-tab"
-  "cowboyd/zsh-volta"
   "romkatv/powerlevel10k"
   "ptavares/zsh-direnv"
   "sabinmarcu/dvm.zsh"
