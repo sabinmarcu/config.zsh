@@ -1,10 +1,10 @@
 if command -v proto &> /dev/null; then
   if $(shouldUpdate); then
     ZDS=$0 debug Installing nodejs
-    proto install node@${PROTO_VERSION_NODE:-latest}
+    proto install node ${PROTO_VERSION_NODE:-latest}
     
     ZDS=$0 debug Installind yarn
-    proto install yarn@${PROTO_VERSION_YARN:-latest}
+    proto install yarn ${PROTO_VERSION_YARN:-latest}
 
     ZDS=$0 debug Setting up proto
     proto setup
