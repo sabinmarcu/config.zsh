@@ -11,6 +11,7 @@ tools+=(
   gdu-go gdu
   btm bottom
   zoxide zoxide
+  tmuxinator tmuxinator
 )
 
 if command -v pacman &> /dev/null; then
