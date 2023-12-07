@@ -12,6 +12,7 @@ tools+=(
   btm bottom
   zoxide zoxide
   tmuxinator tmuxinator
+  op 1password-cli
 )
 
 if command -v pacman &> /dev/null; then
