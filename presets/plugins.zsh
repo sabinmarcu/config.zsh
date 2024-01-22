@@ -49,10 +49,3 @@ if ! command -v zoxide &> /dev/null; then
     "rupa/z path:z.sh"
   )
 fi
-
-# if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
-#   ZDS=$0 debug "Detected iTerm. Adding plugin"
-#   plugins+=(
-#     "laggardkernel/zsh-iterm2"
-#   )
-# fi
