@@ -44,9 +44,16 @@ function _runPlugins {
     ZDS=$ds debug Plugins: ${plugins}
     ZDS=$ds debug Removing old plugins
     echo "" > $ZSH_PLUGINS_SRC
+    local shWordSplit=$(setopt | grep shwordsplit)
+    if ! [ -z shWordSplit ]; then
+      setopt noshwordsplit
+    fi
     for plugin in $plugins; do 
       echo $plugin >> $ZSH_PLUGINS_SRC
     done
+    if ! [ -z shWordSplit ]; then
+      setopt shwordsplit
+    fi
     
     ZDS=$ds debug Compiling plugins file
     if [[ ! $ZSH_PLUGINS -nt $ZSH_PLUGINS_SRC ]]; then
