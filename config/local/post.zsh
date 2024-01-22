@@ -1,3 +1,3 @@
 import config.local.loadLocalConfig
 
-loadLocalConfig
+loadLocalConfig .post
