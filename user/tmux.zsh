@@ -1,6 +1,6 @@
 ZDS=$0 debug "Attempting TMUX init"
 
-if [ $TERM_PROGRAM == "vscode" ]; then
+if [[ $TERM_PROGRAM == "vscode" ]]; then
   export ZSH_NO_TMUX=true
 fi
 
