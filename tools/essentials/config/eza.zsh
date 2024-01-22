@@ -6,7 +6,7 @@ function __eza_ignores {
 }
 export TIME_STYLE="${TIME_STYLE:-long-iso}"
 
-alias ls="eza -Fgh --color-scale --git --group-directories-first --icons --ignore-glob=\"$(__eza_ignores)\""
+alias ls="eza -gh --color-scale --git --group-directories-first --icons --ignore-glob=\"$(__eza_ignores)\""
 alias l.='ls -d .*'
 alias lD='ls -D'
 alias lS='ls -1'
