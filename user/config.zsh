@@ -128,7 +128,7 @@ function configStatus {
       cd $value
 
       # Determine if repo is unclean
-      local files=$(git status --porcelain)
+      local files=$(git status --porcelain 2>&1 )
       local hasFiles=$(if [ -n "$files" ]; then echo 0; else echo 1; fi)
       ZDS=$ds debug "Exit code: $hasFiles with files: \n${files}"
       if [ $hasFiles -eq 0 ]; then
@@ -140,13 +140,15 @@ function configStatus {
 
       # Determine if repo is unsynced
       local branch=$(git rev-parse --abbrev-ref HEAD)
-      local commits=$(git rev-list --left-right --count origin/${branch}...${branch} | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}')
+      local commits=$(git rev-list --left-right --count origin/${branch}...${branch} 2>&1 | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}' | sed 's/\s+//g')
       ZDS=$ds debug "Config $key (branch: $branch), $commits commits out of sync"
-      if ! [ $commits -eq 0 ]; then
-        ZDS=$ds debug "Adding $key to sync list"
-        notsync+=(
-          $key $commits
-        )
+      if ! [[ $commmits == "" ]]; then
+        if ! [ $commits -eq 0 ]; then
+          ZDS=$ds debug "Adding $key to sync list"
+          notsync+=(
+            $key $commits
+          )
+        fi
       fi
     fi
   done
