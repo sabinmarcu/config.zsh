@@ -4,6 +4,10 @@ if [[ $TERM_PROGRAM == "vscode" ]]; then
   export ZSH_NO_TMUX=true
 fi
 
+if [[ $TERM_PROGRAM == "Apple_Terminal" ]]; then
+  export ZSH_NO_TMUX=true
+fi
+
 if [ -z $ZSH_NO_TMUX ]; then 
   ZDS=$0 debug "TMUX opt-out not found"
   if [ -z $NVIM ]; then 
