@@ -26,17 +26,17 @@ function style_text {
 }
 
 function error {
-  echo $(style_text bgRed -- "❌ $@")
+  echo $(style_text bgRed -- "❌ $@") 1>&2
 }
 
 function warn {
-  echo $(style_text yellow underline -- "⚠ $@")
+  echo $(style_text yellow underline -- "⚠ $@") 1>&2
 }
 
 function info {
-  echo $(style_text blue -- " $@")
+  echo $(style_text blue -- " $@") 1>&2
 }
 
 function success {
-  echo $(style_text green -- "✓ $@")
+  echo $(style_text green -- "✓ $@") 1>&2
 }
