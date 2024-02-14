@@ -8,7 +8,6 @@ plugins+=(
   "zsh-users/zsh-syntax-highlighting"
   "fdellwing/zsh-bat kind:defer"
   "zpm-zsh/colorize"
-  "unixorn/fzf-zsh-plugin"
   "aeons/omz-git"
   "wfxr/emoji-cli"
   "reegnz/jq-zsh-plugin kind:defer"
@@ -22,6 +21,7 @@ plugins+=(
   "ptavares/zsh-direnv"
   "sabinmarcu/dvm.zsh"
   "sabinmarcu/cterm.zsh"
+  "sabinmarcu/xenv.zsh"
 )
 
 if command -v pacman &> /dev/null; then
