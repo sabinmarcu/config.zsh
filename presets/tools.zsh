@@ -13,6 +13,7 @@ tools+=(
   zoxide zoxide
   tmuxinator tmuxinator
   op 1password-cli
+  vipe moreutils
 )
 
 if command -v pacman &> /dev/null; then
