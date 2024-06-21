@@ -22,3 +22,5 @@ if [ -z $ZSH_NO_TMUX ]; then
     fi
   fi
 fi
+
+alias tmux-kill-others="tmux list-sessions | cut -d: -f1 | grep -v \$(tmux display-message -p '#S') | xargs -n 1 tmux kill-session -t"
