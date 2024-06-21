@@ -14,6 +14,8 @@ tools+=(
   tmuxinator tmuxinator
   op 1password-cli
   vipe moreutils
+  luarocks luarocks
+  luajit luajit
 )
 
 if command -v pacman &> /dev/null; then
