@@ -3,7 +3,6 @@ local ds=$(debugScope $0)
 export GCFP_COMMIT_TYPES=("feat" "fix" "chore")
 if command -v gum &> /dev/null; then
   function gcfpcommit {
-
     # Commit these changes if user confirms
     if ! [ -z $GCFP_ALL_FLAG ]; then
       gum confirm "Stage all and commit changes?" && git commit -a -m "$GCFP_SUMMARY" -m "$GCFP_DESCRIPTION"
@@ -12,12 +11,24 @@ if command -v gum &> /dev/null; then
     fi
   }
 
-  function gcfpformat {
+  function gcfpformatandcommit {
     # Read summary and description
-    SUMMARY=$(gum input --value "$GCFP_PREFIX" --placeholder "Summary of this change")
+    SUMMARY=$(gum input --value "$@" --placeholder "Summary of this change")
     DESCRIPTION=$(gum write --placeholder "Details of this change")
 
     GCFP_SUMMARY="$SUMMARY" GCFP_DESCRIPTION="$DESCRIPTION" gcfpcommit
+  }
+
+  function gcfpticket {
+    # Detect ticket number
+    local TICKET=""
+    if ! [ -z $GCFP_TICKET_PATTERN ] && command -v rg &> /dev/null; then
+      TICKET=$(git branch | rg "[^\/]\/(${GCFP_TICKET_PATTERN})" -or '$1')
+    fi
+
+    test -n "$TICKET" && TICKET="$TICKET "
+
+    echo $TICKET
   }
 
   function gcfpc {
@@ -39,29 +50,11 @@ if command -v gum &> /dev/null; then
 
     test -n "$SCOPE" && SCOPE="($SCOPE)"
 
-    # Detect ticket number
-    local TICKET=""
-    if ! [ -z $GCFP_TICKET_PATTERN ] && command -v rg &> /dev/null; then
-      TICKET=$(git branch | rg "[^\/]\/(${GCFP_TICKET_PATTERN})" -or '$1')
-    fi
-
-    test -n "$TICKET" && TICKET="$TICKET "
-
-    GCFP_PREFIX="$TYPE$SCOPE: $TICKET" gcfpformat
+    gcfpformatandcommit "$TYPE$SCOPE: $(gcfpticket)"
   }
 
   function gcfpj {
-    # Detect ticket number
-    local TICKET=""
-    if ! [ -z $GCFP_TICKET_PATTERN ] && command -v rg &> /dev/null; then
-      TICKET=$(git branch | rg "[^\/]\/(${GCFP_TICKET_PATTERN})" -or '$1')
-    fi
-
-    if [ -z "$TICKET" ]; then
-      TICKET=$(gum input --placeholder "Ticket number")
-    fi
-
-    GCFP_PREFIX="$TICKET: " gcfpformat
+    gcfpformatandcommit "$(gcfpticket): "
   }
 
   function gcfp {
