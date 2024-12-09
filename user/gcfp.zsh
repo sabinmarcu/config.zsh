@@ -2,6 +2,24 @@ local ds=$(debugScope $0)
 
 export GCFP_COMMIT_TYPES=("feat" "fix" "chore")
 if command -v gum &> /dev/null; then
+  function gcfpcommit {
+
+    # Commit these changes if user confirms
+    if ! [ -z $GCFP_ALL_FLAG ]; then
+      gum confirm "Stage all and commit changes?" && git commit -a -m "$GCFP_SUMMARY" -m "$GCFP_DESCRIPTION"
+    else
+      gum confirm "Commit changes?" && git commit -m "$GCFP_SUMMARY" -m "$GCFP_DESCRIPTION"
+    fi
+  }
+
+  function gcfpformat {
+    # Read summary and description
+    SUMMARY=$(gum input --value "$GCFP_PREFIX" --placeholder "Summary of this change")
+    DESCRIPTION=$(gum write --placeholder "Details of this change")
+
+    GCFP_SUMMARY="$SUMMARY" GCFP_DESCRIPTION="$DESCRIPTION" gcfpcommit
+  }
+
   function gcfpc {
     # Decide on the type of conventional commig
     local TYPE=$(gum choose $GCFP_COMMIT_TYPES)
@@ -9,7 +27,7 @@ if command -v gum &> /dev/null; then
     # Detect scope from workspaces
     local SCOPE=""
 
-    if command -v yarn &> /dev/null; then
+    if command -v yarn &> /dev/null && command -v jq &> /dev/null; then
       if yarn --version | grep -E "1\.\d+\.\d+" &> /dev/null; then
         local workspaces=($(yarn workspaces info --json | tail -n+2 | ghead -n-1 | jq -r "keys[]"))
         SCOPE=$(gum choose $workspaces)
@@ -29,12 +47,7 @@ if command -v gum &> /dev/null; then
 
     test -n "$TICKET" && TICKET="$TICKET "
 
-    # Read summary and description
-    SUMMARY=$(gum input --value "$TYPE$SCOPE: $TICKET" --placeholder "Summary of this change")
-    DESCRIPTION=$(gum write --placeholder "Details of this change")
-
-    # Commit these changes if user confirms
-    gum confirm "Commit changes?" && echo -m "$SUMMARY" -m "$DESCRIPTION"
+    GCFP_PREFIX="$TYPE$SCOPE: $TICKET" gcfpformat
   }
 
   function gcfpj {
@@ -48,19 +61,18 @@ if command -v gum &> /dev/null; then
       TICKET=$(gum input --placeholder "Ticket number")
     fi
 
-    # Read summary and description
-    SUMMARY=$(gum input --value "$TICKET: " --placeholder "Summary of this change")
-    DESCRIPTION=$(gum write --placeholder "Details of this change")
-
-    # Commit these changes if user confirms
-    gum confirm "Commit changes?" && echo -m "$SUMMARY" -m "$DESCRIPTION"
+    GCFP_PREFIX="$TICKET: " gcfpformat
   }
 
   function gcfp {
-    if $GCFP_USE_CONVENTIONAL; then
+    if ! [ -z $GCFP_USE_CONVENTIONAL ]; then
       gcfpc $@
     else
       gcfpj $@
     fi
+  }
+
+  function gcafp {
+    GCFP_ALL_FLAG=true gcfp $@
   }
 fi
