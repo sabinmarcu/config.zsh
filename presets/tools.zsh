@@ -32,3 +32,4 @@ if [ $ZSH_PLATFORM = 'macos' ]; then
   )
 fi
 
+import presets.yazi
