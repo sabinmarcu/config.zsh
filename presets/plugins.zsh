@@ -1,7 +1,7 @@
 plugins+=(
   "willghatch/zsh-saneopt"
   "akash329d/zsh-alias-finder"
-  "wfxr/forgit kind:defer"
+  # "wfxr/forgit kind:defer"
   "MichaelAquilina/zsh-auto-notify"
   "hlissner/zsh-autopair"
   "zsh-users/zsh-autosuggestions"
