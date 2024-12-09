@@ -16,6 +16,8 @@ tools+=(
   vipe moreutils
   luarocks luarocks
   luajit luajit
+  gum gum
+  sesh joshmedeski/sesh/sesh
 )
 
 if command -v pacman &> /dev/null; then
@@ -29,3 +31,4 @@ if [ $ZSH_PLATFORM = 'macos' ]; then
     skhd koekeishiya/formulae/skhd
   )
 fi
+
