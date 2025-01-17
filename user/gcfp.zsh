@@ -23,7 +23,7 @@ if command -v gum &> /dev/null; then
     # Detect ticket number
     local TICKET=""
     if ! [ -z $GCFP_TICKET_PATTERN ] && command -v rg &> /dev/null; then
-      TICKET=$(git branch | rg "[^\/]\/(${GCFP_TICKET_PATTERN})" -or '$1')
+      TICKET=$(git rev-parse --abbrev-ref HEAD | rg "[^\/]\/(${GCFP_TICKET_PATTERN})" -or '$1')
     fi
 
     test -n "$TICKET" && TICKET="$TICKET "
