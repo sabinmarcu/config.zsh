@@ -21,6 +21,8 @@ if [ -z $ZSH_NO_TMUX ]; then
       tmux attach || tmux
     fi
   fi
+else 
+  ZDS=$0 debug "TMUX opt-out found, skipping tmux"
 fi
 
 alias tmux-kill-others="tmux list-sessions | cut -d: -f1 | grep -v \$(tmux display-message -p '#S') | xargs -n 1 tmux kill-session -t"
