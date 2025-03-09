@@ -18,12 +18,23 @@ function _apt_get_install {
 }
 _cleanup _apt_get_install
 
+function _rpm_ostree_install {
+  ZDS="$ds:rpm-ostree" debug Installing "$@"
+  rpm-ostree install $@
+}
+
 function _linux_install {
+  if command -v rpm-ostree; then
+    _rpm_ostree_install $@
+    return 0
+  fi
   if command -v apt-get; then
     _apt_get_install $@
+    return 0
   fi
   if command -v yay; then
     _yay_install $@
+    return 0
   fi
   echo  $(error "Don't know what to install this with (even if I know you're on linux)")
 }
