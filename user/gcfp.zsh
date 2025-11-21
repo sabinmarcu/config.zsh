@@ -2,12 +2,57 @@ local ds=$(debugScope $0)
 
 export GCFP_COMMIT_TYPES=("feat" "fix" "chore")
 if command -v gum &> /dev/null; then
+  function gcfpsave {
+    export GCFP_PREVIOUS_COMMIT_SUMMARY=$GCFP_SUMMARY
+    export GCFP_PREVIOUS_COMMIT_DESCRIPTION=$GCFP_DESCRIPTION
+  }
+  function gcfpclear {
+    unset GCFP_PREVIOUS_COMMIT_SUMMARY
+    unset GCFP_PREVIOUS_COMMIT_DESCRIPTION
+  }
+  function gcfpresume {
+    # Bail if no previous attempts
+    if [ -z $GCFP_PREVIOUS_COMMIT_SUMMARY ]; then
+      return 1
+    fi
+
+    # Determine if user desires resume
+    echo "You have a previous attempt at committing"
+    echo "Message: \033[32;1m${GCFP_PREVIOUS_COMMIT_SUMMARY}\033[0m"
+    echo "Description: \033[32;1m${GCFP_PREVIOUS_COMMIT_DESCRIPTION}\033[0m"
+    gum confirm "Resume?"
+
+    if [[ $? -gt 0 ]]; then
+      # Bail
+      return 1
+    else 
+      # Attempt resume commit
+      git commit -m "$GCFP_PREVIOUS_COMMIT_SUMMARY" -m "$GCFP_PREVIOUS_COMMIT_DESCRIPTION"
+
+      if [[ $? -gt 0 ]]; then
+        # Bail if commit failed
+        return 1
+      else
+        # Clear previous attempt if successful
+        gcfpclear
+        return 0
+      fi
+    fi
+  }
   function gcfpcommit {
+    # Reset previous commit attempts
+
+    gcfpclear
     # Commit these changes if user confirms
     if ! [ -z $GCFP_ALL_FLAG ]; then
       gum confirm "Stage all and commit changes?" && git commit -a -m "$GCFP_SUMMARY" -m "$GCFP_DESCRIPTION"
     else
       gum confirm "Commit changes?" && git commit -m "$GCFP_SUMMARY" -m "$GCFP_DESCRIPTION"
+    fi
+
+    # Save if committing failed
+    if [[ $? -gt 0 ]]; then
+      gcfpsave
     fi
   }
 
@@ -58,10 +103,16 @@ if command -v gum &> /dev/null; then
   }
 
   function gcfp {
-    if ! [ -z $GCFP_USE_CONVENTIONAL ]; then
-      gcfpc $@
-    else
-      gcfpj $@
+    # Attempt resume
+    gcfpresume
+
+    # Attempt commit method if no resume was done (or failed)
+    if [[ $? -gt 0 ]]; then 
+      if ! [ -z $GCFP_USE_CONVENTIONAL ]; then
+        gcfpc $@
+      else
+        gcfpj $@
+      fi
     fi
   }
 
