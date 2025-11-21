@@ -17,6 +17,7 @@ tools+=(
   luarocks luarocks
   luajit luajit
   gum gum
+  sad sad
 )
 
 if command -v pacman &> /dev/null; then
