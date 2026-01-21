@@ -4,7 +4,7 @@ local $XDG_CUSTOM_HOME=${XDG_CUSTOM_HOME:-"$HOME/.config"}
 export ZSH_CUSTOM=${ZSH_CUSTOM:-"$XDG_CUSTOM_HOME/zsh"}
 local ZSH_RC="$HOME/.zshrc"
 local ZSH_CUSTOM_REPO="sabinmarcu/config.zsh"
-local ZSH_CUSTOM_REPO_SSH_URL="git@github.com:${ZSH_CUSTOM_REPO}.git"0
+local ZSH_CUSTOM_REPO_SSH_URL="git@github.com:${ZSH_CUSTOM_REPO}.git"
 local ZSH_CUSTOM_REPO_HTTPS_URL="https://github.com/${ZSH_CUSTOM_REPO}.git"
 local ZSH_CUSTOM_REPO_ARCHIVE_URL="http://github.com/${ZSH_CUSTOM_REPO}/archive/master.zip"
 
