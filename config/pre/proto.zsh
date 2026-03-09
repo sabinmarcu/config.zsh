@@ -1,6 +1,6 @@
 # Proto Config
 export PROTO_HOME="$HOME/.proto";
-export PATH="$PROTO_HOME/shims:$PROTO_HOME/bin:$PATH";
+_updatePath "$PROTO_HOME/shims:$PROTO_HOME/bin";
 
 export __ORIG_PATH="$PATH"
 
@@ -43,29 +43,29 @@ fi
 
 # Go paths
 if ! [ -z $GOBIN ]; then
-  export PATH="$PATH:$GOBIN"
-  export PATH="$PATH:$GOBIN/bin"
-  export PATH="$PATH:$HOME/go/bin"
+  _updatePath "$GOBIN"
+  _updatePath "$GOBIN/bin"
+  _updatePath "$HOME/go/bin"
 fi
 
 if ! [ -z $GOPATH ]; then
-  export PATH="$PATH:$GOPATH/bin"
+  _updatePath "$GOPATH/bin"
 fi
 
 # Node paths
-export PATH="$PATH:$HOME/.proto/tools/node/globals/bin"
+_updatePath "$HOME/.proto/tools/node/globals/bin"
 
 # Python (experimental)
-export PATH="$PATH:$HOME/.local/bin"
+_updatePath "$HOME/.local/bin"
 
 # Bun
-export PATH="$PATH:$HOME/.bun/bin"
+_updatePath "$HOME/.bun/bin"
 
 # Deno
 if ! [ -z $DENO_INSTALL_ROOT ]; then
-  export PATH="$PATH:$DENO_INSTALL_ROOT/bin"
+  _updatePath "$DENO_INSTALL_ROOT/bin"
 fi
 if ! [ -z $DENO_HOME ]; then
-  export PATH="$PATH:$DENO_HOME/bin"
+  _updatePath "$DENO_HOME/bin"
 fi
-export PATH="$PATH:$HOME/.deno/bin"
+_updatePath "$HOME/.deno/bin"

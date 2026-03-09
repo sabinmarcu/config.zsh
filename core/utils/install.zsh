@@ -14,7 +14,7 @@ _cleanup _yay_install
 
 function _apt_get_install {
   ZDS="$ds:apt-get" debug Installing "$@"
-  apt-get install $@
+  sudo apt-get install $@
 }
 _cleanup _apt_get_install
 

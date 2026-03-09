@@ -17,6 +17,8 @@ source $ZSH_CUSTOM/core/init.zsh
 plugins=()
 tools=()
 
+import "config.pre.*"
+
 import config.local.pre
 import tools
 import config
@@ -27,6 +29,8 @@ _runTools
 
 import "config.post.*"
 import "user.*"
+
+ZDS=$0 debug Final Path = `echo $PATH | tr -s ':' '\n'`
 
 _cleanupImportCache
 _runCleanup

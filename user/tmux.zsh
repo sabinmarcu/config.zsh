@@ -12,6 +12,10 @@ if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
   export ZSH_NO_TMUX=true
 fi
 
+if [[ $TERM_PROGRAM == "" ]]; then
+  export ZSH_NO_TMUX=true
+fi
+
 if [ -z $ZSH_NO_TMUX ]; then 
   ZDS=$0 debug "TMUX opt-out not found"
   if [ -z $NVIM ]; then 
@@ -24,5 +28,6 @@ if [ -z $ZSH_NO_TMUX ]; then
 else 
   ZDS=$0 debug "TMUX opt-out found, skipping tmux"
 fi
+
 
 alias tmux-kill-others="tmux list-sessions | cut -d: -f1 | grep -v \$(tmux display-message -p '#S') | xargs -n 1 tmux kill-session -t"
